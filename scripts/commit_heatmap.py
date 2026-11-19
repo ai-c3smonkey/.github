@@ -7,7 +7,7 @@ Org (Default-Branch) und schreibt eine SVG im Stil des GitHub-Contribution-Graph
 Umgebung:
   GH_TOKEN   Token mit Lesezugriff auf die Repos der Org (für private Repos nötig)
   ORG        Default: ai-c3smonkey
-  AUTHOR     GitHub-Login, dessen Commits gezählt werden. Default: marzelwidmer
+  AUTHORS    Kommagetrennte GitHub-Logins, deren Commits gezählt werden. Default: marzelwidmer,c3sm
   OUT        Zieldatei. Default: profile/heatmap.svg
   SAMPLE=1   Zufallsdaten statt API (Offline-Test)
 """
@@ -23,7 +23,7 @@ from collections import Counter
 from datetime import date, datetime, timedelta, timezone
 
 ORG = os.environ.get("ORG", "ai-c3smonkey")
-AUTHOR = os.environ.get("AUTHOR", "marzelwidmer")
+AUTHORS = [name.strip() for name in os.environ.get("AUTHORS", "marzelwidmer,c3sm").split(",") if name.strip()]
 OUT = os.environ.get("OUT", "profile/heatmap.svg")
 TOKEN = os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN")
 API = "https://api.github.com"
@@ -70,19 +70,23 @@ def fetch_counts(since: date) -> Counter[date]:
         if repo.get("archived"):
             continue
         name = repo["name"]
-        try:
-            commits = paginate(
-                f"/repos/{ORG}/{name}/commits?author={AUTHOR}"
-                f"&since={since.isoformat()}T00:00:00Z&per_page=100"
-            )
-        except urllib.error.HTTPError as error:
-            # 409 = leeres Repo, 403/404 = kein Zugriff
-            print(f"  übersprungen: {name} (HTTP {error.code})", file=sys.stderr)
-            continue
-        print(f"  {name}: {len(commits)} Commits", file=sys.stderr)
-        for commit in commits:
-            stamp = commit["commit"]["author"]["date"]
-            counts[datetime.fromisoformat(stamp.replace("Z", "+00:00")).astimezone(timezone.utc).date()] += 1
+        seen: set[str] = set()
+        for author in AUTHORS:
+            try:
+                commits = paginate(
+                    f"/repos/{ORG}/{name}/commits?author={author}"
+                    f"&since={since.isoformat()}T00:00:00Z&per_page=100"
+                )
+            except urllib.error.HTTPError as error:
+                # 409 = leeres Repo, 403/404 = kein Zugriff
+                print(f"  übersprungen: {name}/{author} (HTTP {error.code})", file=sys.stderr)
+                continue
+            fresh = [commit for commit in commits if commit["sha"] not in seen]
+            seen.update(commit["sha"] for commit in fresh)
+            print(f"  {name} ({author}): {len(fresh)} Commits", file=sys.stderr)
+            for commit in fresh:
+                stamp = commit["commit"]["author"]["date"]
+                counts[datetime.fromisoformat(stamp.replace("Z", "+00:00")).astimezone(timezone.utc).date()] += 1
     return counts
 
 
@@ -144,7 +148,7 @@ def render(counts: Counter[date], today: date, first_day: date) -> str:
     parts = [
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" '
         f'viewBox="0 0 {width} {height}" role="img" '
-        f'aria-label="Commits von {AUTHOR} in {ORG}, letzte 12 Monate">',
+        f'aria-label="Commits in {ORG}, letzte 12 Monate">',
         f"<style>{''.join(css)}</style>",
         f'<rect class="bg" width="{width}" height="{height}" rx="6"/>',
         f'<text class="t" x="{left}" y="22">{total} Commits in {ORG} (letzte 12 Monate)</text>',

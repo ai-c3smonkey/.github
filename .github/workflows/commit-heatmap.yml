@@ -22,7 +22,7 @@ jobs:
           # GITHUB_TOKEN reicht nicht, weil er keine anderen Repos der Org lesen darf.
           GH_TOKEN: ${{ secrets.ORG_READ_TOKEN }}
           ORG: ai-c3smonkey
-          AUTHOR: marzelwidmer
+          AUTHORS: marzelwidmer,c3sm
           OUT: profile/heatmap.svg
         run: python scripts/commit_heatmap.py
       - name: Änderung committen
