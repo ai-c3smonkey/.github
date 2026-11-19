@@ -1,0 +1,38 @@
+name: commit-heatmap
+
+on:
+  schedule:
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  heatmap:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Heatmap erzeugen
+        env:
+          # Fine-grained PAT (Resource owner: ai-c3smonkey, alle Repos, Contents: read-only).
+          # GITHUB_TOKEN reicht nicht, weil er keine anderen Repos der Org lesen darf.
+          GH_TOKEN: ${{ secrets.ORG_READ_TOKEN }}
+          ORG: ai-c3smonkey
+          AUTHOR: marzelwidmer
+          OUT: profile/heatmap.svg
+        run: python scripts/commit_heatmap.py
+      - name: Änderung committen
+        run: |
+          if git diff --quiet -- profile/heatmap.svg; then
+            echo "Keine Änderung"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add profile/heatmap.svg
+          git commit -m "chore: update commit heatmap"
+          git push
