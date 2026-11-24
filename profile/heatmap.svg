@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="788" height="196" viewBox="0 0 788 196" role="img" aria-label="Commits in ai-c3smonkey, letzte 12 Monate">
 <style>text{font:12px -apple-system,Segoe UI,Helvetica,Arial,sans-serif;fill:#57606a}.t{font-size:14px;font-weight:600;fill:#1f2328}.bg{fill:#fff}.l0{fill:#ebedf0}.l1{fill:#9be9a8}.l2{fill:#40c463}.l3{fill:#30a14e}.l4{fill:#216e39}@media(prefers-color-scheme:dark){text{fill:#8b949e}.t{fill:#e6edf3}.bg{fill:#0d1117}.l0{fill:#161b22}.l1{fill:#0e4429}.l2{fill:#006d32}.l3{fill:#26a641}.l4{fill:#39d353}}</style>
 <rect class="bg" width="788" height="196" rx="6"/>
-<text class="t" x="34" y="22">807 Commits in ai-c3smonkey (letzte 12 Monate)</text>
-<text x="34" y="38" style="font-size:11px">29 aktive Tage · Serie aktuell 24 · längste Serie 24</text>
+<text class="t" x="34" y="22">830 Commits in ai-c3smonkey (letzte 12 Monate)</text>
+<text x="34" y="38" style="font-size:11px">30 aktive Tage · Serie aktuell 25 · längste Serie 25</text>
 <text x="62" y="56" style="font-size:11px">Dez</text>
 <text x="118" y="56" style="font-size:11px">Jan</text>
 <text x="174" y="56" style="font-size:11px">Feb</text>
@@ -380,7 +380,8 @@
 <rect class="l2" x="748" y="132" width="11" height="11" rx="2"><title>25 Commits am 2026-11-20</title></rect>
 <rect class="l1" x="748" y="146" width="11" height="11" rx="2"><title>10 Commits am 2026-11-21</title></rect>
 <rect class="l1" x="762" y="62" width="11" height="11" rx="2"><title>9 Commits am 2026-11-22</title></rect>
-<rect class="l0" x="762" y="76" width="11" height="11" rx="2"><title>0 Commits am 2026-11-23</title></rect>
+<rect class="l2" x="762" y="76" width="11" height="11" rx="2"><title>23 Commits am 2026-11-23</title></rect>
+<rect class="l0" x="762" y="90" width="11" height="11" rx="2"><title>0 Commits am 2026-11-24</title></rect>
 <text x="4" y="86" style="font-size:10px">Mo</text>
 <text x="4" y="114" style="font-size:10px">Mi</text>
 <text x="4" y="142" style="font-size:10px">Fr</text>
